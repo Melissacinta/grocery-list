@@ -1,43 +1,50 @@
 import { useState } from 'react'
-import logo from './logo.svg'
 import './App.css'
+import Header from './components/Header'
+import Content from './components/Content'
+import Footer from './components/Footer'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [items, setItems] = useState([
+    {
+      id: 1,
+      checked: false,
+      item: "One half pound bag of cocoa coverd almonds unsalted"
+    },
+    {
+      id: 2,
+      checked: false,
+      item: "Item 2"
+    },
+    {
+      id: 3,
+      checked: false,
+      item: "Item 3"
+    }
+  ])
 
+  const handleCheck = (id) => {
+    const listItems = items.map(item => item.id === id ? { ...item, checked: !item.checked } : item);
+
+    setItems(listItems)
+    localStorage.setItem('shoppinglist', JSON.stringify(listItems))
+  }
+
+  const handleDelete = (id) => {
+    const listItems = items.filter(item => item.id !== id);
+
+    setItems(listItems)
+    localStorage.setItem('shoppinglist', JSON.stringify(listItems))
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to see changes.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+      <Header title="Groceries List" />
+      <Content
+        items={items}
+        handleDelete={handleDelete}
+        handleCheck={handleCheck}
+      />
+      <Footer length={items.length} />
     </div>
   )
 }
